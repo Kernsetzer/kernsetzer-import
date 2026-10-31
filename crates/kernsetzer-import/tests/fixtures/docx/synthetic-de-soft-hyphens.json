@@ -1,0 +1,77 @@
+{
+  "assets": [],
+  "book": {
+    "format_version": 2,
+    "metadata": {
+      "authors": [],
+      "lang": "de-DE",
+      "title": ""
+    },
+    "sections": [
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "Ich war in großer Ver­legenheit: eine dringende Reise stand mir bevor; ein Schwer­kranker wartete auf mich in einem zehn Meilen entfernten Dorfe; starkes Schnee­gestöber füllte den weiten Raum zwischen mir und ihm;",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "content": [
+              {
+                "text": "in den Pelz gepackt, die Instrumenten­tasche in der Hand, stand ich reise­fertig schon auf dem Hofe; aber das Pferd fehlte, das Pferd.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "content": [
+              {
+                "text": "Mein eigenes Pferd war in der letzten Nacht, infolge der ",
+                "type": "text"
+              },
+              {
+                "content": [
+                  {
+                    "text": "Über­anstrengung",
+                    "type": "text"
+                  }
+                ],
+                "type": "emphasis"
+              },
+              {
+                "text": " in diesem eisigen Winter, verendet.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "auto"
+        },
+        "title": "Ein Landarzt"
+      }
+    ],
+    "style": {
+      "params": {},
+      "theme": "classic",
+      "trim": {
+        "height_mm": 228.59999084472656,
+        "width_mm": 152.39999389648438
+      }
+    }
+  },
+  "warnings": [
+    {
+      "kind": "no-title",
+      "location": 0,
+      "message": "No book title was found (no Title style, title page or document title). Enter it in the book's details."
+    }
+  ]
+}

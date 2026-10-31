@@ -1,0 +1,351 @@
+{
+  "assets": [],
+  "book": {
+    "format_version": 2,
+    "metadata": {
+      "authors": [
+        "Jane Austen"
+      ],
+      "lang": "en-GB",
+      "title": "Pride and Prejudice"
+    },
+    "sections": [
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "Mr. Bennet replied that he had not.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "right"
+              }
+            ],
+            "header_rows": 1,
+            "rows": [
+              [
+                {
+                  "content": [
+                    {
+                      "content": [
+                        {
+                          "text": "Said",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "content": [
+                        {
+                          "text": "Line",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "content": [
+                        {
+                          "text": "Words",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "“What is his name?”",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "4",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mrs. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "content": [
+                        {
+                          "text": "“Bingley.”",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "1",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "“Is he married or single?”",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "5",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": []
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet made no answer.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "5",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mrs. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "“Oh! single, my dear, to be sure!",
+                      "type": "text"
+                    },
+                    {
+                      "type": "line-break"
+                    },
+                    {
+                      "text": "A single man of large fortune; four or five thousand a year.”",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "19",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ]
+            ],
+            "type": "table"
+          },
+          {
+            "content": [
+              {
+                "text": "This was invitation enough.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "explicit",
+          "value": 1
+        }
+      },
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "Mrs. Bennet deigned not to make any reply; but unable to contain herself, began scolding one of her daughters.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "colspan": 2,
+                  "content": [
+                    {
+                      "text": "Chapter II",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet",
+                      "type": "text"
+                    }
+                  ],
+                  "rowspan": 2
+                },
+                {
+                  "content": [
+                    {
+                      "text": "“I hope Mr. Bingley will like it Lizzy.”",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "“No more have I,” said Mr. Bennet; “and I am glad to find that you do not depend on her serving you.”",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mrs. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "“Don’t keep coughing so, Kitty, for heaven’s sake!”",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ]
+            ],
+            "type": "table"
+          },
+          {
+            "content": [
+              {
+                "text": "This was invitation enough.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "explicit",
+          "value": 2
+        }
+      }
+    ],
+    "style": {
+      "params": {},
+      "theme": "classic",
+      "trim": {
+        "height_mm": 228.59999084472656,
+        "width_mm": 152.39999389648438
+      }
+    }
+  },
+  "warnings": [
+    {
+      "kind": "table-simplified",
+      "location": 3,
+      "message": "Paragraph 3: a table could not be kept in full: a cell with several paragraphs became lines of one cell.",
+      "section": 0
+    }
+  ]
+}

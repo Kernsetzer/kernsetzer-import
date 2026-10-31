@@ -1,0 +1,295 @@
+{
+  "assets": [],
+  "book": {
+    "format_version": 2,
+    "metadata": {
+      "authors": [
+        "Franz Kafka"
+      ],
+      "lang": "de-DE",
+      "title": "Ein Landarzt"
+    },
+    "sections": [
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "Im allgemeinen billigt das Barreau die Aufnahme des Bucephalus.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "right"
+              },
+              {
+                "align": "center"
+              }
+            ],
+            "header_rows": 1,
+            "rows": [
+              [
+                {
+                  "content": [
+                    {
+                      "content": [
+                        {
+                          "text": "Titel",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "content": [
+                        {
+                          "text": "Anfang",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "content": [
+                        {
+                          "text": "Wörter",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "strong"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "content": [
+                        {
+                          "text": "Absätze",
+                          "type": "text"
+                        }
+                      ],
+                      "type": "strong"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Der neue Advokat",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Wir haben einen neuen Advokaten, den Dr. Bucephalus.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "8",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "3",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Ein Landarzt",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Ich war in großer Verlegenheit:",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "5",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "5",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Vor dem Gesetz",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Vor dem Gesetz steht ein Türhüter.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "6",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "1",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Das nächste Dorf",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Mein Großvater pflegte zu sagen:",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "5",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "1",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ]
+            ],
+            "type": "table"
+          },
+          {
+            "content": [
+              {
+                "text": "Wir haben einen neuen Advokaten, den Dr. Bucephalus.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "auto"
+        },
+        "title": "Der neue Advokat"
+      },
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "Vor dem Gesetz steht ein Türhüter.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "content": [
+              {
+                "text": "Zu diesem Türhüter kommt ein Mann vom Lande und bittet um Eintritt in das Gesetz.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "auto"
+        },
+        "title": "Vor dem Gesetz"
+      }
+    ],
+    "style": {
+      "params": {},
+      "theme": "classic",
+      "trim": {
+        "height_mm": 228.59999084472656,
+        "width_mm": 152.39999389648438
+      }
+    }
+  },
+  "warnings": [
+    {
+      "kind": "table-flattened",
+      "location": 27,
+      "message": "Paragraph 27: a table with one column was kept as paragraphs, in reading order; a table block needs at least two columns.",
+      "section": 1
+    }
+  ]
+}

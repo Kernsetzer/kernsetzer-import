@@ -1,0 +1,659 @@
+{
+  "assets": [],
+  "book": {
+    "format_version": 2,
+    "metadata": {
+      "authors": [
+        "Jane Austen"
+      ],
+      "lang": "en-GB",
+      "title": "Pride and Prejudice"
+    },
+    "sections": [
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "Mr. Bennet replied that he had not.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              }
+            ],
+            "header_rows": 2,
+            "rows": [
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Said",
+                      "type": "text"
+                    }
+                  ],
+                  "rowspan": 2
+                },
+                {
+                  "align": "center",
+                  "colspan": 2,
+                  "content": [
+                    {
+                      "text": "Lines",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Question",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Answer",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet",
+                      "type": "text"
+                    }
+                  ],
+                  "rowspan": 2
+                },
+                {
+                  "content": [
+                    {
+                      "text": "What is his name?",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Bingley.",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Is he married or single?",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Oh! single, my dear, to be sure!",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ]
+            ],
+            "type": "table"
+          },
+          {
+            "content": [
+              {
+                "text": "This was invitation enough.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "explicit",
+          "value": 1
+        }
+      },
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "Mr. Bennet made no answer.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "What is his name?",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Bingley.",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": []
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Is he married or single?",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Oh! single, my dear, to be sure!",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mrs. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Nonsense, nonsense!",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "I am sick of Mr. Bingley",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Girls",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": []
+                },
+                {
+                  "content": [
+                    {
+                      "text": "The girls stared at their father.",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Kitty",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "let us return to Mr. Bingley",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "What an excellent father you have, girls",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "colspan": 2,
+                  "content": []
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet made no answer.",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ]
+            ],
+            "type": "table"
+          },
+          {
+            "content": [
+              {
+                "text": "The girls stared at their father.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "explicit",
+          "value": 2
+        }
+      },
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "Nonsense, nonsense!",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "colspan": 2,
+                  "content": [
+                    {
+                      "text": "Said",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "What is his name?",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Bingley.",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": []
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Is he married or single?",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Oh! single, my dear, to be sure!",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet replied that he had not.",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "This was invitation enough.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet made no answer.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "colspan": 2,
+                  "content": []
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mrs. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Nonsense, nonsense!",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "I am sick of Mr. Bingley",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Kitty",
+                      "type": "text"
+                    },
+                    {
+                      "type": "line-break"
+                    },
+                    {
+                      "text": "The girls stared at their father.",
+                      "type": "text"
+                    }
+                  ],
+                  "rowspan": 2
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "let us return to Mr. Bingley",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "What an excellent father you have, girls",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ]
+            ],
+            "type": "table"
+          },
+          {
+            "content": [
+              {
+                "text": "Mr. Bennet replied that he had not.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "explicit",
+          "value": 3
+        }
+      },
+      {
+        "blocks": [
+          {
+            "content": [
+              {
+                "text": "This was invitation enough.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "columns": [
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              },
+              {
+                "align": "left"
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "colspan": 5,
+                  "content": [
+                    {
+                      "text": "Nonsense, nonsense!",
+                      "type": "text"
+                    }
+                  ]
+                }
+              ],
+              [
+                {
+                  "content": [
+                    {
+                      "text": "Mr. Bennet replied that he had not.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "What is his name?",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": [
+                    {
+                      "text": "Bingley.",
+                      "type": "text"
+                    }
+                  ]
+                },
+                {
+                  "content": []
+                },
+                {
+                  "content": []
+                }
+              ]
+            ],
+            "type": "table"
+          },
+          {
+            "content": [
+              {
+                "text": "Mr. Bennet made no answer.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "content": [
+              {
+                "text": "This was invitation enough.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "content": [
+              {
+                "text": "Mr. Bennet made no answer.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "content": [
+              {
+                "text": "The girls stared at their father.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "chapter",
+        "numbering": {
+          "type": "explicit",
+          "value": 4
+        }
+      }
+    ],
+    "style": {
+      "params": {},
+      "theme": "classic",
+      "trim": {
+        "height_mm": 228.59999084472656,
+        "width_mm": 152.39999389648438
+      }
+    }
+  },
+  "warnings": [
+    {
+      "kind": "table-simplified",
+      "location": 18,
+      "message": "Paragraph 18: a table could not be kept in full: a merged cell with nothing to merge into stayed an ordinary cell.",
+      "section": 1
+    },
+    {
+      "kind": "table-simplified",
+      "location": 39,
+      "message": "Paragraph 39: a table could not be kept in full: text in a covered cell of a merge went to the merged cell.",
+      "section": 2
+    },
+    {
+      "kind": "table-flattened",
+      "location": 66,
+      "message": "Paragraph 66: a table with one column was kept as paragraphs, in reading order; a table block needs at least two columns.",
+      "section": 3
+    }
+  ]
+}
