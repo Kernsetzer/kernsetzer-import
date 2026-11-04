@@ -75,9 +75,10 @@
 //!                                   right, `:-:` centre, `---` left). The
 //!                                   header row is the header, none when all
 //!                                   of it is empty (`| | |`). A short row
-//!                                   is padded; cells beyond the header's
-//!                                   count are left out, and a table with no
-//!                                   text is dropped: `TableSimplified`.
+//!                                   is padded; the text of cells beyond the
+//!                                   header's count joins the row's last
+//!                                   cell, and a table with no text is
+//!                                   dropped: `TableSimplified`.
 //!                                   Merged cells cannot be written here
 //!
 //! - Rope, *the long one*,        <- list: `-`, `*` or `+` items, or `1.`/`1)`;
@@ -551,9 +552,11 @@ impl Body<'_> {
     /// Add a pipe table as a table block: the delimiter row
     /// gives each column's alignment, the header row is the one header row
     /// (none when all of it is empty: how GFM writes a table without a
-    /// header), a short row is padded and cells beyond the header's count are
-    /// left out. A table with no text at all is dropped (its caption stays
-    /// a paragraph). Both cases warn with `TableSimplified`, once per table.
+    /// header), a short row is padded, and cells beyond the header's count
+    /// are kept: the table's layout appends their text, after a line break,
+    /// to the row's last cell, so no text is lost. A table with no text at
+    /// all is dropped (its caption stays a paragraph). Both cases warn with
+    /// `TableSimplified`, once per table.
     /// The caption, if any, is the table's caption (inlines).
     fn table(&mut self, table: &PipeTable, caption: Option<Caption<'_>>) {
         let Some(&(start, _)) = table.rows.first() else {
@@ -599,7 +602,6 @@ impl Body<'_> {
             rows.push(
                 cells
                     .iter()
-                    .take(width)
                     .map(|cell| TableCell::new(self.inlines(cell)))
                     .collect(),
             );
@@ -615,8 +617,8 @@ impl Body<'_> {
             let section = self.current_index();
             self.warnings.push(warn(
                 section,
-                "Some rows of this table have more cells than its header row; the extra \
-                 cells were left out.",
+                "Some rows of this table have more cells than its header row; the text \
+                 of the extra cells was added to the last cell of the row.",
             ));
         }
     }
@@ -2919,17 +2921,20 @@ mod tests {
     }
 
     #[test]
-    fn short_rows_are_padded_and_long_rows_are_cut_with_a_warning() {
+    fn short_rows_are_padded_and_long_rows_join_their_last_cell_with_a_warning() {
         let (tables, warnings) =
-            pipe_tables("| a | b | c |\n|-|-|-|\n| 1 |\n| 2 | 3 |\n| 4 | 5 | 6 | 7 |\n");
+            pipe_tables("| a | b | c |\n|-|-|-|\n| 1 |\n| 2 | 3 |\n| 4 | 5 | 6 | 7 | 8 |\n");
         let [t] = tables.as_slice() else { panic!() };
+        // The extra cells' text is in the row's last cell, after line breaks
+        // (a space in plain text).
+        assert_eq!(t.layout().columns, 3);
         assert_eq!(
             texts(t),
             [
                 ["a", "b", "c"],
                 ["1", "", ""],
                 ["2", "3", ""],
-                ["4", "5", "6"]
+                ["4", "5", "6 7 8"]
             ]
         );
         let got: Vec<_> = warnings.iter().map(|w| (w.kind, w.location)).collect();
@@ -2970,12 +2975,17 @@ mod tests {
     }
 
     #[test]
-    fn a_footnote_mark_in_a_dropped_cell_is_an_unused_note() {
+    fn a_footnote_mark_in_an_extra_cell_is_kept_with_its_note() {
         let (tables, warnings) = pipe_tables("| a |\n|-|\n| 1 | x[^1] |\n\n[^1]: Note.\n");
-        assert_eq!(texts(&tables[0]), [["a"], ["1"]]);
+        assert_eq!(texts(&tables[0]), [["a"], ["1 x"]]);
         let kinds: Vec<_> = warnings.iter().map(|w| w.kind).collect();
         assert!(kinds.contains(&WarningKind::TableSimplified), "{kinds:?}");
-        assert!(kinds.contains(&WarningKind::FootnoteUnused), "{kinds:?}");
+        assert!(!kinds.contains(&WarningKind::FootnoteUnused), "{kinds:?}");
+        let note = tables[0].rows[1][0]
+            .content
+            .iter()
+            .any(|i| matches!(i, Inline::Footnote { .. }));
+        assert!(note, "{:?}", tables[0].rows[1][0].content);
     }
 
     #[test]
