@@ -44,11 +44,20 @@ fn summarize(result: Result<Imported, ImportError>) -> Summary {
             warnings: im
                 .warnings
                 .into_iter()
-                .map(|w| (w.kind, w.location, w.section, w.detail))
+                .map(|w| (w.kind, w.location, w.section, textless(w.detail)))
                 .collect(),
             shape: shape(&im.book),
         },
     }
+}
+
+/// A warning's detail without the manuscript's words (the copy has other
+/// words: where a break is must match, what follows it need not).
+fn textless(mut detail: Option<WarningDetail>) -> Option<WarningDetail> {
+    if let Some(WarningDetail::SceneBreaks { breaks }) = &mut detail {
+        breaks.iter_mut().for_each(|b| b.words.clear());
+    }
+    detail
 }
 
 /// One line per section and per block: the kinds, nothing of the text.

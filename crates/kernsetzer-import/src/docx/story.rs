@@ -35,6 +35,8 @@ pub(super) struct Fmt {
     pub small_caps: bool,
     pub sup: bool,
     pub sub: bool,
+    /// Black text on a black background: the author blacked the words out.
+    pub redacted: bool,
 }
 
 impl Fmt {
@@ -45,6 +47,7 @@ impl Fmt {
             small_caps: self.small_caps && o.small_caps,
             sup: self.sup && o.sup,
             sub: self.sub && o.sub,
+            redacted: self.redacted && o.redacted,
         }
     }
 }
@@ -1363,6 +1366,14 @@ impl Parser<'_, '_, '_> {
         // Only direct underline counts; link styles underline by style.
         let underline = direct.underline == Some(true) && self.link().is_none();
         let vert = direct.vert.or(cs.vert).or(ps.vert);
+        // Black on black hides the words in Word; only that pair counts.
+        let black = |d: Option<bool>, c: Option<bool>, p: Option<bool>| d.or(c).or(p) == Some(true);
+        let redacted = black(direct.black_text, cs.black_text, ps.black_text)
+            && (black(
+                direct.black_highlight,
+                cs.black_highlight,
+                ps.black_highlight,
+            ) || black(direct.black_shade, cs.black_shade, ps.black_shade));
         Some((
             Fmt {
                 em: italic || underline,
@@ -1370,6 +1381,7 @@ impl Parser<'_, '_, '_> {
                 small_caps,
                 sup: vert == Some(VertAlign::Super),
                 sub: vert == Some(VertAlign::Sub),
+                redacted,
             },
             caps,
             direct.size.or(cs.size).or(ps.size),
@@ -1441,6 +1453,7 @@ mod tests {
         small_caps: false,
         sup: false,
         sub: false,
+        redacted: false,
     };
 
     #[test]

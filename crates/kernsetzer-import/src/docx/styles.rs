@@ -19,6 +19,25 @@ pub(super) struct RunProps {
     pub vert: Option<VertAlign>,
     /// Font size in half-points (`w:sz`).
     pub size: Option<u16>,
+    /// The text colour is (nearly) black (`w:color`).
+    pub black_text: Option<bool>,
+    /// The run's background is black: highlight colour black, or shading
+    /// filled black.
+    pub black_highlight: Option<bool>,
+    pub black_shade: Option<bool>,
+}
+
+/// A colour written as six hex digits that is black or very nearly so;
+/// `auto` and anything else is not.
+fn is_black(hex: Option<&str>) -> bool {
+    let Some(h) = hex.filter(|h| h.len() == 6) else {
+        return false;
+    };
+    (0..3).all(|i| {
+        h.get(2 * i..2 * i + 2)
+            .and_then(|c| u8::from_str_radix(c, 16).ok())
+            .is_some_and(|v| v <= 0x30)
+    })
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -40,6 +59,9 @@ impl RunProps {
             underline: child.underline.or(self.underline),
             vert: child.vert.or(self.vert),
             size: child.size.or(self.size),
+            black_text: child.black_text.or(self.black_text),
+            black_highlight: child.black_highlight.or(self.black_highlight),
+            black_shade: child.black_shade.or(self.black_shade),
         }
     }
 
@@ -54,6 +76,21 @@ impl RunProps {
             "vanish" => self.hidden = Some(on_off(e)),
             "u" => self.underline = Some(on_off(e)),
             "sz" => self.size = int_attr(e, "val").and_then(|v| u16::try_from(v).ok()),
+            "color" => self.black_text = Some(is_black(val(e).as_deref())),
+            "highlight" => {
+                self.black_highlight = Some(val(e).is_some_and(|v| v.eq_ignore_ascii_case("black")))
+            }
+            "shd" => {
+                // A solid pattern paints the foreground colour, any other
+                // pattern's fill is the background (ECMA-376 §17.3.5.31).
+                let solid = val(e).is_some_and(|v| v.eq_ignore_ascii_case("solid"));
+                let paint = if solid {
+                    attr(e, "color")
+                } else {
+                    attr(e, "fill")
+                };
+                self.black_shade = Some(is_black(paint.as_deref()));
+            }
             "vertAlign" => {
                 self.vert = Some(match val(e).as_deref() {
                     Some("superscript") => VertAlign::Super,

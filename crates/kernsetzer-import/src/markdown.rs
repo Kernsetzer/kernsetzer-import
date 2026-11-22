@@ -1769,6 +1769,23 @@ fn parse_inlines(s: &str, notes: &mut Notes) -> Vec<Inline> {
                 continue;
             }
         }
+        // `==blacked out==`: the words are kept, set on a black box. A lone
+        // `==` (as in `a == b`) or one followed by a space stays text.
+        if c == '='
+            && chars.get(i + 1) == Some(&'=')
+            && chars
+                .get(i + 2)
+                .is_some_and(|n| !n.is_whitespace() && *n != '=')
+            && let Some(end) = find_closing(&chars, i + 2, &['=', '='])
+        {
+            flush_text(&mut buf, &mut out);
+            let inner: String = chars[i + 2..end].iter().collect();
+            out.push(Inline::Redacted {
+                content: parse_inlines(&inner, notes),
+            });
+            i = end + 2;
+            continue;
+        }
         let strong = c == '*' && chars.get(i + 1) == Some(&'*');
         if strong {
             if let Some(end) = find_closing(&chars, i + 2, &['*', '*']) {
@@ -2085,6 +2102,42 @@ mod tests {
                 },
             ]
         );
+    }
+
+    #[test]
+    fn redacted_words() {
+        let red = |t: &str| Inline::Redacted {
+            content: vec![Inline::text(t)],
+        };
+        assert_eq!(
+            parse_inlines(
+                "It is ==a truth universally== acknowledged, that ==*a* single== man",
+                &mut Notes::default()
+            ),
+            vec![
+                Inline::text("It is "),
+                red("a truth universally"),
+                Inline::text(" acknowledged, that "),
+                Inline::Redacted {
+                    content: vec![
+                        Inline::Emphasis {
+                            content: vec![Inline::text("a")]
+                        },
+                        Inline::text(" single")
+                    ]
+                },
+                Inline::text(" man"),
+            ]
+        );
+        // A comparison, an opening marker before a space and an unclosed
+        // one stay text.
+        for src in ["a == b and c == d", "so == not this==", "an ==open marker"] {
+            assert_eq!(
+                parse_inlines(src, &mut Notes::default()),
+                vec![Inline::text(src)],
+                "{src}"
+            );
+        }
     }
 
     #[test]
