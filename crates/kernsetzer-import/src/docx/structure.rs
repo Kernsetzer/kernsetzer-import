@@ -14,7 +14,7 @@ use super::inline;
 use super::story::{Para, Piece, Seg, TableData};
 use super::styles::{Align, Purpose, Role};
 use crate::heading::{self, HeadingInfo};
-use crate::{ImportWarning, WarningKind, is_dedication, vocab};
+use crate::{ImportWarning, SceneBreakAt, WarningDetail, WarningKind, is_dedication, vocab};
 use setzer_model::{
     Block, ColumnAlign, Epigraph, ImagePlacement, Inline, Lang, MAX_VERSE_INDENT, Metadata,
     Numbering, Section, SectionKind, Table, TableCell, TableColumn,
@@ -217,14 +217,16 @@ pub(super) fn build(
         }
         if lead < items.len() {
             t.start_section(String::new());
+            let content = blocks(&items[lead..], &marks[lead..], g, true, &mut t);
             sections.push(Section {
                 style: Default::default(),
                 kind: SectionKind::Chapter,
                 title: None,
                 numbering: Numbering::Auto,
                 epigraph: None,
-                blocks: blocks(&items[lead..], &marks[lead..], g, true, &mut t),
+                blocks: content,
             });
+            t.commit(sections.len() - 1, 0);
             starts.push(items[lead].p.index);
         }
         warnings.push(ImportWarning {
@@ -273,14 +275,16 @@ pub(super) fn build(
             items[i].line_texts().join(" ")
         ));
         let here = section_gap(&items[body..end], g);
+        let content = blocks(&items[body..end], &marks[body..end], here, true, &mut t);
         sections.push(Section {
             style: Default::default(),
             kind,
             title,
             numbering,
             epigraph: epigraph.map(|(e, _)| e),
-            blocks: blocks(&items[body..end], &marks[body..end], here, true, &mut t),
+            blocks: content,
         });
+        t.commit(sections.len() - 1, 0);
         starts.push(items[i].p.index);
     }
 
@@ -963,13 +967,8 @@ fn front_matter(
                     })
                     .map(|it| it.text.clone());
             }
-            push_section(
-                sections,
-                starts,
-                at,
-                SectionKind::Copyright,
-                blocks(page, pm, g, false, t),
-            );
+            let content = blocks(page, pm, g, false, t);
+            push_section(sections, starts, t, at, SectionKind::Copyright, content);
             prev_other = false;
             continue;
         }
@@ -1040,14 +1039,14 @@ fn front_matter(
         {
             if dedication || !epigraph && is_dedication(&page[0].text) {
                 let content = blocks(page, pm, g, false, t);
-                push_section(sections, starts, at, SectionKind::Dedication, content);
+                push_section(sections, starts, t, at, SectionKind::Dedication, content);
             } else if let Some(a) = attribution {
                 // Set like a chapter epigraph: lines, attribution apart.
-                let s = push_section(sections, starts, at, SectionKind::Epigraph, Vec::new());
+                let s = push_section(sections, starts, t, at, SectionKind::Epigraph, Vec::new());
                 sections[s].epigraph = Some(epigraph_of(lines, Some(a)));
             } else {
                 let content = blocks(page, pm, g, false, t);
-                push_section(sections, starts, at, SectionKind::Epigraph, content);
+                push_section(sections, starts, t, at, SectionKind::Epigraph, content);
             }
             prev_other = false;
             continue;
@@ -1056,10 +1055,12 @@ fn front_matter(
         let content = blocks(page, pm, g, false, t);
         if prev_other && let Some(s) = sections.last_mut() {
             // Consecutive unclassified pages are one section.
+            let offset = s.blocks.len();
             s.blocks.extend(content);
+            t.commit(sections.len() - 1, offset);
             continue;
         }
-        let section = push_section(sections, starts, at, SectionKind::Other, content);
+        let section = push_section(sections, starts, t, at, SectionKind::Other, content);
         warnings.push(ImportWarning {
             kind: WarningKind::TextBeforeFirstChapter,
             location: at,
@@ -1099,6 +1100,7 @@ fn front_matter(
 fn push_section(
     sections: &mut Vec<Section>,
     starts: &mut Vec<usize>,
+    t: &mut Tallies,
     at: usize,
     kind: SectionKind,
     blocks: Vec<Block>,
@@ -1112,6 +1114,7 @@ fn push_section(
         blocks,
     });
     starts.push(at);
+    t.commit(sections.len() - 1, 0);
     sections.len() - 1
 }
 
@@ -1226,7 +1229,14 @@ struct BlankBreaks {
     /// Where the section is, for the author: "under the heading “…”".
     place: String,
     tally: Tally,
-    /// The first words after the first break.
+    breaks: Vec<SceneBreakAt>,
+}
+
+/// A break seen while a section's blocks were being built, before the
+/// section has its index.
+struct Staged {
+    para: usize,
+    block: usize,
     words: String,
 }
 
@@ -1234,33 +1244,52 @@ struct BlankBreaks {
 struct Tallies {
     line_breaks: Tally,
     page_breaks: Tally,
-    /// Number and place of the section being built.
-    section: (usize, String),
+    /// Where the section being built is, for the author.
+    place: String,
+    staged: Vec<Staged>,
     blank_breaks: Vec<BlankBreaks>,
 }
 
 impl Tallies {
     fn start_section(&mut self, place: String) {
-        self.section = (self.section.0 + 1, place);
+        self.place = place;
     }
 
-    /// A scene break made from empty paragraphs before `text`.
-    fn blank_break(&mut self, para: usize, text: &str) {
-        let (section, place) = &self.section;
-        if let Some(b) = self.blank_breaks.last_mut()
-            && b.section == *section
-        {
-            b.tally.note(para);
-            return;
-        }
-        let mut tally = Tally::default();
-        tally.note(para);
-        self.blank_breaks.push(BlankBreaks {
-            section: *section,
-            place: place.clone(),
-            tally,
+    /// A scene break made from empty paragraphs before `text`, at block
+    /// `block` of the vector `blocks()` is building. Counted once the
+    /// section is placed: see `commit`.
+    fn blank_break(&mut self, para: usize, text: &str, block: usize) {
+        self.staged.push(Staged {
+            para,
+            block,
             words: opening(text),
         });
+    }
+
+    /// Places the breaks staged since the last call in section `section`,
+    /// whose block `offset` is where the staged blocks start.
+    fn commit(&mut self, section: usize, offset: usize) {
+        for s in std::mem::take(&mut self.staged) {
+            let at = SceneBreakAt {
+                block: s.block + offset,
+                words: s.words,
+            };
+            if let Some(b) = self.blank_breaks.last_mut()
+                && b.section == section
+            {
+                b.tally.note(s.para);
+                b.breaks.push(at);
+                continue;
+            }
+            let mut tally = Tally::default();
+            tally.note(s.para);
+            self.blank_breaks.push(BlankBreaks {
+                section,
+                place: self.place.clone(),
+                tally,
+                breaks: vec![at],
+            });
+        }
     }
 
     fn report(&self, warnings: &mut Vec<ImportWarning>) {
@@ -1302,15 +1331,20 @@ impl Tallies {
             } else {
                 format!(" {}", b.place)
             };
-            push(
-                WarningKind::SceneBreaksFromBlankLines,
-                &b.tally,
-                format!(
-                    "{} scene break(s){place} were made from empty lines, the first before “{}”. \
+            let words = b.breaks.first().map_or("", |a| a.words.as_str());
+            warnings.push(ImportWarning {
+                kind: WarningKind::SceneBreaksFromBlankLines,
+                location: b.tally.first,
+                section: Some(b.section),
+                message: format!(
+                    "{} scene break(s){place} were made from empty lines, the first before “{words}”. \
                      Check them, or mark scene breaks with *** in the manuscript.",
-                    b.tally.count, b.words
+                    b.tally.count
                 ),
-            );
+                detail: Some(WarningDetail::SceneBreaks {
+                    breaks: b.breaks.clone(),
+                }),
+            });
         }
     }
 }
@@ -1490,6 +1524,9 @@ fn blocks(items: &[Item], marks: &[Mark], g: usize, in_body: bool, t: &mut Talli
             },
             (_, Kind::Plain) => {
                 let mut b = para_blocks(&it.p, Some(&mut t.line_breaks));
+                if in_body {
+                    keep_alignment(&it.p, &mut b);
+                }
                 let mut next = k + 1;
                 // A caption right after an image.
                 if let Some(Block::Image { caption, .. }) = b.last_mut()
@@ -1507,6 +1544,7 @@ fn blocks(items: &[Item], marks: &[Mark], g: usize, in_body: bool, t: &mut Talli
             if let Some(p) = pending.take()
                 && !out.is_empty()
             {
+                let break_at = out.len();
                 out.push(Block::scene_break());
                 if let Some(at) = p {
                     // A table has no text of its own: quote its first cell.
@@ -1520,6 +1558,7 @@ fn blocks(items: &[Item], marks: &[Mark], g: usize, in_body: bool, t: &mut Talli
                     t.blank_break(
                         items[at].p.index,
                         lead.as_deref().unwrap_or(&items[at].text),
+                        break_at,
                     );
                 }
             }
@@ -1628,6 +1667,27 @@ fn table_block(data: &TableData) -> Block {
         u32::try_from(data.header_rows).unwrap_or(0),
         rows,
     ))
+}
+
+/// A right-aligned or centred body paragraph keeps that as
+/// `extra["align"]` (`"right"` or `"center"`): a deliberate choice in a
+/// manuscript (one voice in italics, a sign-off). Justified and left are
+/// the normal body text and are not kept. Only in body sections: front
+/// matter (a dedication) is centred by the theme.
+fn keep_alignment(p: &Para, blocks: &mut [Block]) {
+    let align = match p.align {
+        Align::End => "right",
+        Align::Center => "center",
+        Align::Start | Align::Justify => return,
+    };
+    if p.role != Role::Body {
+        return;
+    }
+    for b in blocks {
+        if let Block::Paragraph { extra, .. } = b {
+            extra.insert("align".into(), align.into());
+        }
+    }
 }
 
 /// A footnote or endnote paragraph's blocks.

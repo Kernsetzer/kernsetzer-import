@@ -1,7 +1,8 @@
 //! Segments of one paragraph → model `Inline`s: manual-formatting cleanup
 //! (leading tabs, double spaces, zero-width spaces), whitespace moved out of
 //! emphasis, adjacent runs of equal formatting merged, and nesting in a
-//! fixed order (link > super/subscript > strong > emphasis > small caps).
+//! fixed order (link > redacted > super/subscript > strong > emphasis > small
+//! caps).
 
 use super::story::{Fmt, Piece, Seg};
 use setzer_model::Inline;
@@ -187,16 +188,17 @@ pub(super) fn plain_text(segs: &[Seg]) -> String {
 }
 
 /// Nesting order: the outermost attribute first.
-const DEPTH: usize = 6;
+const DEPTH: usize = 7;
 
 fn key(s: &Seg, depth: usize) -> Option<&str> {
     let on = |b: bool| b.then_some("");
     match depth {
         0 => s.link.as_deref(),
-        1 => on(s.fmt.sup),
-        2 => on(s.fmt.sub),
-        3 => on(s.fmt.strong),
-        4 => on(s.fmt.em),
+        1 => on(s.fmt.redacted),
+        2 => on(s.fmt.sup),
+        3 => on(s.fmt.sub),
+        4 => on(s.fmt.strong),
+        5 => on(s.fmt.em),
         _ => on(s.fmt.small_caps),
     }
 }
@@ -226,10 +228,11 @@ fn build(segs: &[Seg], depth: usize) -> Vec<Inline> {
                     url: url.to_string(),
                     content: inner,
                 },
-                1 => Inline::Superscript { content: inner },
-                2 => Inline::Subscript { content: inner },
-                3 => Inline::Strong { content: inner },
-                4 => Inline::Emphasis { content: inner },
+                1 => Inline::Redacted { content: inner },
+                2 => Inline::Superscript { content: inner },
+                3 => Inline::Subscript { content: inner },
+                4 => Inline::Strong { content: inner },
+                5 => Inline::Emphasis { content: inner },
                 _ => Inline::SmallCaps { content: inner },
             }),
         }
@@ -278,6 +281,7 @@ mod tests {
         small_caps: false,
         sup: false,
         sub: false,
+        redacted: false,
     };
     const EM: Fmt = Fmt { em: true, ..P };
     const EMB: Fmt = Fmt {

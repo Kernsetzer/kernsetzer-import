@@ -1,7 +1,7 @@
 //! Test helpers (synthetic .docx files) and end-to-end tests of `import()`.
 
 use super::import;
-use crate::{ImportError, Imported, WarningKind};
+use crate::{ImportError, Imported, SceneBreakAt, WarningDetail, WarningKind};
 use setzer_model::{
     Block, ColumnAlign, Epigraph, Inline, Numbering, SectionKind, Table, TableCell, TableColumn,
 };
@@ -892,6 +892,50 @@ fn blank_line_breaks_reported_per_chapter() {
         })
         .collect();
     assert_eq!(w, vec![(Some(0), true), (Some(1), true)]);
+}
+
+#[test]
+fn blank_line_breaks_say_where_they_are() {
+    let body = vec![
+        ps("Heading1", "Chapter 1"),
+        p("It is a truth universally acknowledged."),
+        p("However little known the feelings."),
+        empty(),
+        empty(),
+        p("Mr. Bennet made no answer."),
+        p("Do not you want to know who has taken it?"),
+        p("You want to tell me, and I have no objection."),
+        empty(),
+        empty(),
+        p("This was invitation enough."),
+    ];
+    let im = Docx::new(&body).import();
+    let w: Vec<_> = im
+        .warnings
+        .iter()
+        .filter(|w| w.kind == WarningKind::SceneBreaksFromBlankLines)
+        .collect();
+    assert_eq!(w.len(), 1, "{w:?}");
+    let Some(WarningDetail::SceneBreaks { breaks }) = &w[0].detail else {
+        panic!("no positions: {:?}", w[0].detail);
+    };
+    let blocks = &im.book.sections[w[0].section.unwrap()].blocks;
+    assert_eq!(
+        breaks,
+        &vec![
+            SceneBreakAt {
+                block: 2,
+                words: "Mr. Bennet made no answer.".into()
+            },
+            SceneBreakAt {
+                block: 6,
+                words: "This was invitation enough.".into()
+            },
+        ]
+    );
+    for b in breaks {
+        assert_eq!(blocks[b.block], Block::scene_break(), "{blocks:?}");
+    }
 }
 
 /// A table of plain cells, `rows[0]` marked as the header row.
@@ -3172,5 +3216,102 @@ fn the_span_fixture_reads_every_merge_in_adr_0011e() {
             .filter(|w| w.kind == WarningKind::TableFlattened)
             .count(),
         1
+    );
+}
+
+#[test]
+fn right_and_centred_body_paragraphs_keep_their_alignment() {
+    let im = Docx::new(&[
+        ps("Heading1", "Chapter 1"),
+        p("It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife."),
+        pj("right", "However little known the feelings or views of such a man may be."),
+        pj("both", "This truth is so well fixed in the minds of the surrounding families."),
+        pj("left", "My dear Mr. Bennet, have you heard that Netherfield Park is let at last?"),
+        pj("center", "Mr. Bennet replied that he had not."),
+    ])
+    .import();
+    let blocks = &im.book.sections[0].blocks;
+    let align = |i: usize| match &blocks[i] {
+        Block::Paragraph { extra, .. } => extra.get("align").and_then(|v| v.as_str()),
+        other => panic!("{other:?}"),
+    };
+    assert_eq!(blocks.len(), 5);
+    assert_eq!(
+        (0..5).map(align).collect::<Vec<_>>(),
+        vec![None, Some("right"), None, None, Some("center")]
+    );
+}
+
+/// A run with the given `w:rPr` content.
+fn run_with(rpr: &str, text: &str) -> String {
+    format!(r#"<w:r><w:rPr>{rpr}</w:rPr><w:t xml:space="preserve">{text}</w:t></w:r>"#)
+}
+
+#[test]
+fn black_text_on_a_black_background_is_redacted() {
+    let black = r#"<w:color w:val="000000"/>"#;
+    let body = format!(
+        "<w:p>{}{}{}{}{}{}</w:p>",
+        run("It is a truth "),
+        run_with(
+            &format!(r#"{black}<w:shd w:val="clear" w:color="auto" w:fill="000000"/>"#),
+            "universally"
+        ),
+        run(" acknowledged, "),
+        run_with(
+            &format!(r#"{black}<w:highlight w:val="black"/>"#),
+            "that a single man"
+        ),
+        run_with(r#"<w:color w:val="000000"/>"#, " in possession"),
+        run_with(
+            r#"<w:shd w:val="clear" w:color="auto" w:fill="000000"/>"#,
+            " of a good fortune"
+        ),
+    );
+    let im = Docx::new(&[ps("Heading1", "Chapter 1"), body]).import();
+    let Block::Paragraph { content, .. } = &im.book.sections[0].blocks[0] else {
+        panic!("{:?}", im.book.sections[0].blocks);
+    };
+    let red = |t: &str| Inline::Redacted {
+        content: vec![Inline::text(t)],
+    };
+    assert_eq!(
+        content,
+        &vec![
+            Inline::text("It is a truth "),
+            red("universally"),
+            Inline::text(" acknowledged, "),
+            red("that a single man"),
+            // Black text alone, and a black background alone, show their
+            // words: neither is redacted.
+            Inline::text(" in possession of a good fortune"),
+        ]
+    );
+    assert_eq!(
+        Inline::plain_text(content),
+        "It is a truth universally acknowledged, that a single man in possession of a good fortune"
+    );
+}
+
+#[test]
+fn redacted_words_run_on_across_the_space_between_them() {
+    let on_black = r#"<w:color w:val="000000"/><w:highlight w:val="black"/>"#;
+    let body = format!(
+        "<w:p>{}{}{}{}</w:p>",
+        run("My dear Mr. Bennet, "),
+        run_with(on_black, "have you"),
+        run_with(on_black, " heard"),
+        run(" that Netherfield Park is let at last?"),
+    );
+    let im = Docx::new(&[ps("Heading1", "Chapter 1"), body]).import();
+    let Block::Paragraph { content, .. } = &im.book.sections[0].blocks[0] else {
+        panic!();
+    };
+    assert_eq!(content.len(), 3, "{content:?}");
+    assert_eq!(
+        content[1],
+        Inline::Redacted {
+            content: vec![Inline::text("have you heard")]
+        }
     );
 }

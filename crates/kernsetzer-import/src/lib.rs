@@ -52,6 +52,20 @@ pub enum WarningDetail {
     FrontMatterKey { key: String },
     /// The name of a `:::` fence that was not closed (Markdown).
     Fence { name: String },
+    /// The scene breaks of one section that were made from empty lines
+    /// (.docx), in reading order. `ImportWarning::section` names the
+    /// section.
+    SceneBreaks { breaks: Vec<SceneBreakAt> },
+}
+
+/// One scene break made from empty lines.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct SceneBreakAt {
+    /// Index of the `Block::SceneBreak` in its section's `blocks`, as the
+    /// importer returns the book.
+    pub block: usize,
+    /// The first words after the break.
+    pub words: String,
 }
 
 /// What a warning is about, so the UI can group and link warnings and
